@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="robots" content="noindex">
+
+        <title>Beds in Novapago Hostal</title>
+    </head>
+    <body>
+        <form>
+            <input type="number" name="n" class="guests" placeholder="Potential visiting guests">
+            <input type="number" name="k" class="beds" placeholder="Number of beds">
+            <button type="button" class="add-beds-and-guests">Create</button>
+        </form>
+        <br><br>
+        <div class="n-lines">
+            
+        </div>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+
+                $('body').on('click', '.add-beds-and-guests', function (e) {
+
+                    var guests = parseInt($('.guests').val());
+                    var beds = parseInt($('.beds').val());
+
+                    $(".n-lines").html('');
+
+                    if (guests && beds && beds >= 1 && guests >= 1 && beds < guests && guests <= 100000)
+                    {
+                        var html = '';
+                        for (var i = 1; i <= guests; i++) {
+
+                            html += '<input type="number" name="x[]" class="arrive" placeholder="Arrival Hour" style="margin-right:10px;"><input type="number" name="y[]" class="leave" placeholder="Leaving Hour"><br/><br/>';
+                        }
+
+                        html += '<button type="button" class="show-output">Output</button>';
+
+                        $(".n-lines").append(html);
+                    }
+                });
+
+                $('body').on('click', '.show-output', function (e) {
+
+                    var bookings = 0;
+
+                    var booked_hours = [];
+
+                    for (var i = 0; i <= 24; i++) {
+                        booked_hours[i] = 0;
+                    }
+
+                    $('.n-lines .arrive').each(function() {
+
+                        var x = parseInt($(this).val());
+                        var y = parseInt($(this).next().val());
+
+                        if (x >= 0 && y >= 0 && x < y && y <= 24 )
+                        {
+                            var exist = 0;
+                            for (var j = x+1; j <= y; j++) {
+
+                                if (booked_hours[j] == 1)
+                                {
+                                    exist = 1;
+                                }
+                            }
+
+                            if (exist == 0)
+                            {
+                                for (var j = x; j <= y; j++) {
+
+                                    booked_hours[j] = 1;
+                                }
+
+                                bookings++;
+                            }
+                        }
+                    });
+
+
+                    $(".n-lines").append('<br/><br/><p style="color:red;font-size:16px;">Output: '+ bookings +'</p>');
+                });
+            });
+        </script>
+    </body>
+</html>
